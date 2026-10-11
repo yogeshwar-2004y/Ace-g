@@ -1,0 +1,19 @@
+# One persistent instance owns the in-memory rooms and turn timers.
+services:
+  - type: web
+    name: ace-getaway
+    runtime: docker
+    repo: https://github.com/yogeshwar-2004y/Ace-g
+    branch: main
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: HOSTNAME
+        value: 0.0.0.0
+      - key: NEXT_TELEMETRY_DISABLED
+        value: '1'
+      - key: MAX_ROOMS
+        value: '500'
