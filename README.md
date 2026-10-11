@@ -137,7 +137,7 @@ This release runs on **one server instance with in-memory rooms**. Restarting th
 
 The server enforces bounded payloads, event/chat rate limits, password hashing, origin checks, spectator limits and room limits; text is rendered through React without HTML injection. Disconnected unseated sessions expire, empty rooms are deleted and stale rooms close. Put a production service behind proxy-level connection/IP rate limits. If a reverse proxy fronts the app, the built-in connection limit groups by the direct peer address; configure upstream limits appropriately instead of trusting arbitrary forwarded IP headers. Chat and room names are user-generated: add moderation/reporting and operational monitoring for a public deployment.
 
-The Dockerfile is supplied for deployment but must be built and exercised in your target environment. No hosting account was provisioned and no public deployment was made.
+The Dockerfile has been built and deployed on Render. The public game is available at [ace-getaway.onrender.com](https://ace-getaway.onrender.com), with a single free Docker web service in Singapore.
 
 ## Deploy this repository to Render
 

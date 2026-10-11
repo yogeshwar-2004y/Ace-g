@@ -52,8 +52,8 @@ async function run() {
   const code = created!.code;
   assert.match(code, /^[A-Z2-9]{6}$/);
   assert.ok(!lists.get(p2)?.some((r) => r.code === code), 'Private table must not be listed');
-  await send(p2, 'room:join', { name: 'Maya', avatar: 1, code, password: 'wrong' }, false);
-  await send(p2, 'room:join', { name: 'Maya', avatar: 1, code, password: 'table-pass' });
+  await send(p2, 'room:join', { name: 'Yazhi', avatar: 1, code, password: 'wrong' }, false);
+  await send(p2, 'room:join', { name: 'Yazhi', avatar: 1, code, password: 'table-pass' });
   await send(p3, 'room:join', { name: 'Kavin', avatar: 2, code, password: 'table-pass' });
   await send(
     spectator,
@@ -73,7 +73,10 @@ async function run() {
   for (const s of [host, p2, p3]) await send(s, 'room:ready', true);
   await send(p2, 'game:start', {}, false);
   await send(host, 'game:start', {});
-  await until(() => states.get(host)?.phase === 'playing', 'Game did not start');
+  await until(
+    () => [host, p2, p3, spectator].every((s) => states.get(s)?.phase === 'playing'),
+    'Game start did not synchronize to every client',
+  );
   for (const s of [host, p2, p3]) {
     const view = states.get(s)!;
     assert.ok(view.hand.length >= 17);
@@ -86,6 +89,10 @@ async function run() {
   await send(spectator, 'game:play', { cardId: 'spades-14' }, false);
   const before = states.get(opener)!.hand.length;
   await send(opener, 'game:play', { cardId: 'spades-14' });
+  await until(
+    () => [host, p2, p3, spectator].every((s) => states.get(s)?.trick.length === 1),
+    'Opening play did not synchronize to every client',
+  );
   assert.equal(states.get(opener)!.hand.length, before - 1);
   await send(opener, 'game:play', { cardId: 'spades-14' }, false);
   await send(spectator, 'chat:send', 'Hello from the sidelines!');
